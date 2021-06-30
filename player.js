@@ -13,9 +13,12 @@ function Player(x, y, falling) {
     this.health = 100;
     this.dead = false;
 
+    prevHealth = this.health;
+    takingDmg = false;
+
     this.draw = function() {
         fill("red");
-        rect(this.x, this.y, 50, 50);
+        rect(this.x + offset.x, this.y + offset.y, 50, 50);
     }
 
     this.move = function(dir) {
@@ -47,6 +50,7 @@ function Player(x, y, falling) {
             if (s && this.y < i.y + i.h && this.y + this.h > i.y && this.yVel < 0) i.collide(1, i.y + i.h, true);
         }
         this.yVel += gravity;
+
         if (this.health <= 0) {
             this.health = 0;
             this.dead = true;

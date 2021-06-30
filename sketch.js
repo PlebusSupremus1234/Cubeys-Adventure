@@ -1,18 +1,18 @@
 let map = [
-    "........................",
-    "........................",
-    "........................",
-    "........................",
-    "........................",
-    "........................",
-    "........................",
-    "........................",
-    "....p......gggg.........",
-    "...........####.........",
-    "................ssssgggg",
-    "ggggggggg.......ggggg###",
-    "########glllllllg#######",
-    "########glllllllg#######",
+    "g........................g",
+    "g........................g",
+    "g........................g",
+    "g........................g",
+    "g........................g",
+    "g........................g",
+    "g........................g",
+    "g........................g",
+    "g....p......gggg.........g",
+    "g........................g",
+    "g................ssssggggg",
+    "gggggggggg.......gggg####g",
+    "g#########LLLLLLL########g",
+    "g#########lllllll########g"
 ];
 /*
     . = air
@@ -20,12 +20,16 @@ let map = [
     # = soil
     s = spikes
     l = lava
+    L = lava with yellow grad
+    i = ice
     p = player
 */
 
 let grid = [];
 let player;
 let gravity = 1;
+
+let offset = { x: -50, y: 0 };
 
 function setup() {
     createCanvas(1200, 700);
@@ -36,7 +40,9 @@ function setup() {
             if (map[i][j] === "#") type = "soil";
             else if (map[i][j] === "g") type = "ground";
             else if (map[i][j] === "l") type = "lava";
+            else if (map[i][j] === "L") type = "lava2";
             else if (map[i][j] === "s") type = "spikes";
+            else if (map[i][j] === "i") type = "ice";
             else if (map[i][j] === "p") player = new Player(j * 50, i * 50, true);
             if (type) grid.push(new Block(j * 50, i * 50, type));
         }
@@ -44,7 +50,7 @@ function setup() {
 }
 
 function draw() {
-    background("#87ceeb");
+    background("#51b8e1");
     noStroke();
     if (keyIsDown(LEFT_ARROW)) player.move("left");
     if (keyIsDown(RIGHT_ARROW)) player.move("right");

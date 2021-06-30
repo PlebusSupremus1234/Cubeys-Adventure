@@ -6,43 +6,43 @@ function Block(x, y, type) {
     this.type = type;
 
     this.draw = function() {
-        if (this.type === "ground") fill("#709c3f");
-        if (this.type === "portal") fill(186, 52, 235, random(190, 250));
-        rect(this.x, this.y, this.w, this.h );
+        if (this.type === "spikes") {
+            fill("#858585");
+            triangle(this.x, this.y + this.h, this.x + this.w / 2, this.y + this.h, this.x + this.w / 4, this.y);
+            triangle(this.x + this.w / 2, this.y + this.h, this.x + this.w, this.y + this.h, this.x + 3 * this.w / 4, this.y);
+        } else {
+            if (this.type === "ground") fill("#00d620");
+            else if (this.type === "soil") fill("#963c15");
+            else if (this.type === "lava") fill("#ff6200");
+            rect(this.x, this.y, this.w, this.h);
+        }
     }
 
-    this.collideY = function(player) {
-        let p = player;
-        if (p.x + p.w > this.x && p.x < this.x + this.w && p.y + p.h > this.y && p.y + p.h < this.y + this.h && p.yVel > 0) {
-            if (this.type === "portal") lvlcomplete = true;
-            
-            player.falling = false;
-            p.y = this.y - p.h;
-            p.yVel = 0;                
-        }
-
-        if (p.x + p.w > this.x && p.x < this.x + this.w && p.y < this.y + this.h && p.y + p.h > this.y && p.yVel < 0) {
-            if (this.type === "portal") lvlcomplete = true;
-
-            p.y = this.y + this.h;
-            p.yVel = 0;
+    this.collide = function(axis, pos, f) {
+        if (this.type === "lava") {
+            player.health = 0;
+            player.yVel /= 1.5;
+            player.xVel /= 1.5;
+        } else if (this.type === "spikes") {
+            player.health -= 40;
+            if (player.health <= 0) {
+                player.health = 0;
+                player.dead = true;
+            }
+            if (!player.dead) {
+                player.y = this.y - 50;
+                player.yVel = -20;
+            }
             player.falling = true;
+        } else {
+            if (axis === 0) {
+                player.xVel = 0;
+                player.x = pos;
+            } else {
+                player.falling = f;
+                player.yVel = 0;
+                player.y = pos;
+            }
         }
     }
-    
-    this.collideX = function(player) {
-        let p = player;
-        if (p.y + p.h > this.y && p.y + p.h < this.y + this.h + p.h && p.x + p.w > this.x && p.x + p.w < this.x + this.w && p.xVel > 0) {
-            if (this.type === "portal") lvlcomplete = true;
-            
-            p.x = this.x - p.w;
-            p.xVel = 0;
-        }
-        if (p.y + p.h > this.y && p.y + p.h < this.y + this.h + p.h && p.x < this.x + this.w && p.x > this.x && p.xVel < 0) {
-            if (this.type === "portal") lvlcomplete = true;
-
-            p.x = this.x + this.w;
-            p.xVel = 0;
-        }
-    };
 }

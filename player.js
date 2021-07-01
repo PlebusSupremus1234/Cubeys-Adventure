@@ -14,11 +14,11 @@ function Player(x, y, falling) {
     this.dead = false;
     this.accelY = false;
 
-    offset.x = width / 2 - this.x;
+    offset.x = (width - this.w) / 2 - this.x;
 
     this.draw = function() {
         fill("red");
-        rect(this.x + offset.x, this.y + offset.y, 50, 50);
+        rect(this.x + offset.x, this.y + offset.y, this.w, this.h);
     }
 
     this.move = function(dir) {
@@ -60,6 +60,6 @@ function Player(x, y, falling) {
             this.dead = true;
         }
 
-        offset.x -= (this.x + offset.x - width / 2) / 20;
+        offset.x -= (this.x + this.w / 2 + offset.x - width / 2) / 20;
     }
 }

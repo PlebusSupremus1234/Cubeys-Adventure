@@ -1,5 +1,7 @@
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
 let map = [
     "..........................",
     "..........................",
@@ -22,6 +24,7 @@ let gravity = 1;
 let offset = { x: 0, y: 0 };
 let width = 1200;
 let height = 700;
+const musicHandle = new playMusic("music.mp3");
 import { Player } from "./player.js";
 import { Block } from "./block.js";
 export { offset, gravity, width, height };
@@ -49,6 +52,20 @@ for (let i = 0; i < map.length; i++) {
         if (type)
             grid.push(new Block(j * 50, i * 50, type));
     }
+}
+function playMusic(musicPath) {
+    this.sound = document.createElement("audio");
+    this.sound.src = musicPath;
+    this.sound.setAttribute("preload", "auto");
+    this.sound.setAttribute("controls", "none");
+    this.sound.style.display = "none";
+    document.body.appendChild(this.sound);
+    this.play = function () {
+        this.sound.play();
+    };
+    this.pause = function () {
+        this.sound.pause();
+    };
 }
 function draw() {
     requestAnimationFrame(draw);

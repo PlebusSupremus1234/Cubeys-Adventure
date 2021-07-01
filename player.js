@@ -14,6 +14,10 @@ function Player(x, y, falling) {
     this.dead = false;
     this.accelY = false;
 
+    set dead(dead) {
+        if (dead == true) alert("Lmao you died");
+	this.dead = dead;
+	
     offset.x = width / 2 - this.x;
 
     this.draw = function() {

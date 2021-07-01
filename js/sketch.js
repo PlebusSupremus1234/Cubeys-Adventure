@@ -24,7 +24,6 @@ let gravity = 1;
 let offset = { x: 0, y: 0 };
 let width = 1200;
 let height = 700;
-let musicHandle;
 import { Player } from "./player.js";
 import { Block } from "./block.js";
 export { offset, gravity, width, height };
@@ -53,21 +52,6 @@ for (let i = 0; i < map.length; i++) {
             grid.push(new Block(j * 50, i * 50, type));
     }
 }
-function playMusic(musicPath) {
-    this.sound = document.createElement("audio");
-    this.sound.src = musicPath;
-    this.sound.setAttribute("preload", "auto");
-    this.sound.setAttribute("controls", "none");
-    this.sound.style.display = "none";
-    document.body.appendChild(this.sound);
-    this.play = function () {
-        this.sound.play();
-    };
-    this.pause = function () {
-        this.sound.pause();
-    };
-}
-musicHandle = new playMusic("music.mp3");
 function draw() {
     requestAnimationFrame(draw);
     ctx.clearRect(0, 0, canvas.width, canvas.height);

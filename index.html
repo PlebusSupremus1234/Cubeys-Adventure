@@ -5,7 +5,26 @@
         <link rel="stylesheet" href="styles.css">
         <meta charset="utf-8">
     </head>
-    <body> 
+    <body>
+        <script>
+            // This is hot fucking shit
+            function playMusic(musicPath) {
+                this.sound = document.createElement("audio");
+                this.sound.src = musicPath;
+                this.sound.setAttribute("preload", "auto");
+                this.sound.setAttribute("controls", "none");
+                this.sound.style.display = "none";
+                document.body.appendChild(this.sound);
+                this.play = function() {
+                    this.sound.play();
+                }
+                this.pause = function() {
+                    this.sound.pause();
+                }
+            }
+
+            let musicHandle = new playMusic("music.mp3");
+        </script>
         <div id="music-controls">
             <button onclick="musicHandle.play()" type="button">Play music</button>
             <button onclick="musicHandle.pause()" type="button">Pause music</button>

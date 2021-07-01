@@ -28,11 +28,27 @@ let map = [
 let grid = [];
 let player;
 let gravity = 1;
+let musicHandle;
 
 let offset = { x: 0, y: 0 };
 
+function playMusic(musicPath) {
+    this.sound = document.createElement("audio");
+    this.sound.src = musicPath;
+    this.sound.setAttribute("preload", "auto");
+    this.sound.setAttribute("controls", "none");
+    this.sound.style.display = "none";
+    document.body.appendChild(this.sound);
+    this.play = function() {
+      this.sound.play();
+    }
+    this.pause = function() {
+      this.sound.pause();
+    }
+  }
+
 function setup() {
-    createCanvas(1200, 700);
+    createCanvas(window.innerWidth - 25, window.innerHeight - 35);
     textAlign(CENTER);
     for (let i = 0; i < map.length; i++) {
         for (let j = 0; j < map[i].length; j++) {
@@ -47,6 +63,8 @@ function setup() {
             if (type) grid.push(new Block(j * 50, i * 50, type));
         }
     }
+    musicHandle = new playMusic('music.mp3');
+    musicHandle.play();
 }
 
 function draw() {
@@ -65,6 +83,17 @@ function draw() {
     fill(0);
     textSize(20);
     text(`Health ${player.health}%`, 40 + 100, 52);
+    if (player.dead == true) {
+        setTimeout(function() { 
+            window.alert("You died!");
+            restart();
+        }, 0);
+    }
+}
+
+function restart() {
+    remove();
+    location.reload();
 }
 
 function keyPressed() {

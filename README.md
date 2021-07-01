@@ -1,4 +1,4 @@
-# Cubeys Adventure
+# [Cubeys Adventure](https://plebussupremus1234.github.io/Cubeys-Adventure/)
 A simple fun 2d platformer game
 
 Currently under heavy development.

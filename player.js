@@ -14,7 +14,7 @@ function Player(x, y, falling) {
     this.dead = false;
     this.accelY = false;
 
-
+    offset.x = width / 2 - this.x;
 
     this.draw = function() {
         fill("red");
@@ -60,6 +60,6 @@ function Player(x, y, falling) {
             this.dead = true;
         }
 
-        offset.x = width / 2 - this.x;
+        offset.x -= (this.x + offset.x - width / 2) / 20;
     }
 }

@@ -24,7 +24,7 @@ let gravity = 1;
 let offset = { x: 0, y: 0 };
 let width = 1200;
 let height = 700;
-const musicHandle = new playMusic("music.mp3");
+let musicHandle;
 import { Player } from "./player.js";
 import { Block } from "./block.js";
 export { offset, gravity, width, height };
@@ -67,6 +67,7 @@ function playMusic(musicPath) {
         this.sound.pause();
     };
 }
+musicHandle = new playMusic("music.mp3");
 function draw() {
     requestAnimationFrame(draw);
     ctx.clearRect(0, 0, canvas.width, canvas.height);

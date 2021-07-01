@@ -1,8 +1,23 @@
 body {
     margin: 5px 0 0 5px;
+    background-color: #51b8e1;
+}
+
+button {
+    text-align: center;
 }
 
 #c {
     width: 1200px;
     height: 700px;
+}
+
+#music-controls {
+    display: flex;
+    justify-content: center;
+}
+
+canvas {
+    width: 90%;
+    height: 90%
 }

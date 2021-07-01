@@ -12,9 +12,9 @@ function Player(x, y, falling) {
     this.falling = falling;
     this.health = 100;
     this.dead = false;
+    this.accelY = false;
 
-    prevHealth = this.health;
-    takingDmg = false;
+
 
     this.draw = function() {
         fill("red");
@@ -51,9 +51,15 @@ function Player(x, y, falling) {
         }
         this.yVel += gravity;
 
+        if (this.accelY) {
+            this.yVel = this.accelY;
+            this.accelY = false;
+        }
         if (this.health <= 0) {
             this.health = 0;
             this.dead = true;
         }
+
+        offset.x = width / 2 - this.x;
     }
 }

@@ -4,7 +4,7 @@ A simple fun 2d platformer game
 Currently under heavy development.
 
 Things to do:
-  - Red transparent overlay when daking dmg
+  - Red transparent overlay when taking dmg
   - Add levels
   - Portals
   - Moving Platforms

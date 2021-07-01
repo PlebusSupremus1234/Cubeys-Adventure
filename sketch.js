@@ -1,5 +1,5 @@
 let map = [
-    "g........................g",
+    "gggggggggggggggggggggggggg",
     "g........................g",
     "g........................g",
     "g........................g",
@@ -29,7 +29,7 @@ let grid = [];
 let player;
 let gravity = 1;
 
-let offset = { x: -50, y: 0 };
+let offset = { x: 0, y: 0 };
 
 function setup() {
     createCanvas(1200, 700);

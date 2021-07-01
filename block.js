@@ -58,7 +58,7 @@ function Block(x, y, type) {
             }
             if (!player.dead) {
                 player.y = this.y - 50;
-                player.yVel = -20;
+                player.accelY = -20;
             }
             player.falling = true;
         } else {

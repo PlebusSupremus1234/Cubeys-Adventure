@@ -1,5 +1,5 @@
 body {
-    margin: 5px 0 0 5px;
+    margin: 0;
     background-color: #51b8e1;
 }
 
@@ -7,17 +7,11 @@ button {
     text-align: center;
 }
 
-#c {
-    width: 1200px;
-    height: 700px;
-}
-
 #music-controls {
+    margin: 0;
     display: flex;
+    position: absolute;
+    top: 0;
     justify-content: center;
-}
-
-canvas {
-    width: 90%;
-    height: 90%;
+    width: 100%;
 }

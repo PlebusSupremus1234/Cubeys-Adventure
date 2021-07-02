@@ -1,10 +1,11 @@
 import { offset } from "./sketch.js";
+import { global } from "./global.js";
 export class Block {
     constructor(x, y, type) {
+        this.w = global.blocksize;
         this.x = x;
-        this.y = type === "spikes" ? y + 15 : y;
-        this.w = 50;
-        this.h = type === "spikes" ? 35 : 50;
+        this.y = type === "spikes" ? y + 0.3 * global.blocksize : y;
+        this.h = type === "spikes" ? 0.7 * global.blocksize : global.blocksize;
         this.type = type;
     }
     draw(ctx) {
@@ -12,7 +13,7 @@ export class Block {
         if (this.type === "spikes") {
             let px = this.x + x;
             let py = this.y + y;
-            let s = 50 / 2;
+            let s = global.blocksize / 2;
             for (let i = 0; i < 2; i++) {
                 ctx.fillStyle = "#85a1a3";
                 ctx.beginPath();
@@ -39,7 +40,7 @@ export class Block {
             if (this.type === "ground") {
                 ctx.fillStyle = "#00d620";
                 ctx.fillRect(this.x + x, this.y + y, this.w, 15);
-                let s = 50 / 3;
+                let s = global.blocksize / 3;
                 for (let i = 0; i < 3; i++) {
                     let a = i * s;
                     let px = this.x + x;
@@ -73,8 +74,8 @@ export class Block {
                 player.dead = true;
             }
             if (!player.dead) {
-                player.y = this.y - 50;
-                player.accelY = -20;
+                player.y = this.y - global.blocksize;
+                player.accelY = -player.jumpHeight;
             }
             player.falling = true;
         }

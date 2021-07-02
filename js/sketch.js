@@ -1,7 +1,12 @@
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
+let width = window.innerWidth;
+let height = window.innerHeight - 4;
+canvas.width = width;
+canvas.height = height;
+import { global } from "./global.js";
+let blocksize = width / 30;
+global.blocksize = blocksize;
 let map = [
     "..........................",
     "..........................",
@@ -16,21 +21,21 @@ let map = [
     ".................ssssggggg",
     "gggggggggg.......gggg#####",
     "##########LLLLLLL#########",
-    "##########lllllll#########"
+    "##########lllllll#########",
+    "##########################"
 ];
 let grid = [];
 let player;
 let gravity = 1;
 let offset = { x: 0, y: 0 };
-let width = 1200;
-let height = 700;
 import { Player } from "./player.js";
 import { Block } from "./block.js";
+import { Music } from "./music.js";
 export { offset, gravity, width, height };
 let keysDown = [false, false];
 document.addEventListener("keydown", keyDown);
 document.addEventListener("keyup", keyUp);
-let alerted = false;
+let music = new Music("assets/music.mp3");
 for (let i = 0; i < map.length; i++) {
     for (let j = 0; j < map[i].length; j++) {
         let type;
@@ -47,9 +52,9 @@ for (let i = 0; i < map.length; i++) {
         else if (map[i][j] === "i")
             type = "ice";
         else if (map[i][j] === "p")
-            player = new Player(j * 50, i * 50);
+            player = new Player(j * global.blocksize, i * global.blocksize);
         if (type)
-            grid.push(new Block(j * 50, i * 50, type));
+            grid.push(new Block(j * global.blocksize, i * global.blocksize, type));
     }
 }
 function draw() {
@@ -73,8 +78,8 @@ function draw() {
     ctx.font = "20px Sans Serif";
     ctx.textAlign = "center";
     ctx.fillText(`Health ${player.health}%`, 40 + 100, 52);
-    if (player.alerted === 1) {
-        player.alerted = 2;
+    if (global.alerted === 1) {
+        global.alerted = 2;
         setTimeout(() => {
             alert("You died!");
             location.reload();
@@ -82,6 +87,9 @@ function draw() {
     }
 }
 draw();
+document.getElementById("play").onclick = () => music.play();
+document.getElementById("pause").onclick = () => music.pause();
+document.getElementById("restart").onclick = () => location.reload();
 function keyDown(k) {
     if (k.key.toLowerCase() === "arrowleft")
         keysDown[0] = true;

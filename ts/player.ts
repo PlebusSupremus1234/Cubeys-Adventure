@@ -1,37 +1,25 @@
 import { offset, gravity, width, height } from "./sketch.js"
+import { global } from "./global.js"
+
 export class Player {
     x: number;
     y: number;
-    w: number;
-    h: number;
-    xVel: number;
-    yVel: number;
-    health: number;
-    accelY: number
-    alerted: number;
-    falling: boolean;
-    dead: boolean;
-    readonly jumpHeight: number;
-    readonly speed: number;
-    readonly maxSx: number;
-    readonly maxSy: number;
+    xVel = 0;
+    yVel = 0;
+    accelY = 0;
+    health = 100;
+    dead = false;
+    falling = true;
+    w = global.blocksize;
+    h = global.blocksize;
+    readonly jumpHeight = global.blocksize / 3;
+    readonly speed = 1;
+    readonly maxSx = 8;
+    readonly maxSy = 30;
 
     constructor(x: number, y: number) {
         this.x = x;
         this.y = y;
-        this.w = 50;
-        this.h = 50;
-        this.xVel = 0;
-        this.yVel = 0;
-        this.jumpHeight = 20;
-        this.speed = 1;
-        this.maxSx = 8;
-        this.maxSy = 30;
-        this.falling = true;
-        this.health = 100;
-        this.dead = false;
-        this.accelY = 0;
-        this.alerted = 0;
 
         offset.x = (width - this.w) / 2 - this.x;
         offset.y = (height - this.h) / 2 - this.y + 50;
@@ -76,11 +64,11 @@ export class Player {
             this.yVel = this.accelY;
             this.accelY = 0;
         }
-        if (this.y >= 1000 && this.alerted === 0) this.alerted = 1;
+        if (this.y >= 1000 && global.alerted === 0) global.alerted = 1;
         if (this.health <= 0) {
             this.health = 0;
             this.dead = true;
-            if (this.alerted === 0) this.alerted = 1;
+            if (global.alerted === 0) global.alerted = 1;
         }
 
         offset.x -= (this.x + this.w / 2 + offset.x - width / 2) / 20;

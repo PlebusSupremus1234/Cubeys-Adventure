@@ -6,33 +6,15 @@
         <meta charset="utf-8">
     </head>
     <body>
-        <script>
-            // This is hot fucking shit
-            function playMusic(musicPath) {
-                this.sound = document.createElement("audio");
-                this.sound.src = musicPath;
-                this.sound.setAttribute("preload", "auto");
-                this.sound.setAttribute("controls", "none");
-                this.sound.style.display = "none";
-                document.body.appendChild(this.sound);
-                this.play = function() {
-                    this.sound.play();
-                }
-                this.pause = function() {
-                    this.sound.pause();
-                }
-            }
-
-            let musicHandle = new playMusic("music.mp3");
-        </script>
-        <div id="music-controls">
-            <button onclick="musicHandle.play()" type="button">Play music</button>
-            <button onclick="musicHandle.pause()" type="button">Pause music</button>
-            <button onclick="location.reload()" type="button">Restart</button>
-        </div> 
         <canvas id="canvas"></canvas>
 	    <script type="module" src="js/sketch.js"></script>
 	    <script type="module" src="js/block.js"></script>
 	    <script type="module" src="js/player.js"></script>
+	    <script type="module" src="js/music.js"></script>
+        <div id="music-controls">
+            <button id="play" type="button">Play music</button> <!--do this in sketch.js then-->
+            <button id="pause" type="button">Pause music</button>
+            <button id="restart" type="button">Restart</button>
+        </div> 
     </body>
 </html>

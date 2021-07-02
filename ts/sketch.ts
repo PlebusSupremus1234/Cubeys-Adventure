@@ -7,7 +7,7 @@ canvas.width = width;
 canvas.height = height;
 
 import { global } from "./global.js"
-let blocksize = width / 30;
+let blocksize = width / 40;
 global.blocksize = blocksize;
 
 let map = [

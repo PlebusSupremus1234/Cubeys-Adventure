@@ -12,7 +12,7 @@ export class Player {
     falling = true;
     w = global.blocksize;
     h = global.blocksize;
-    readonly jumpHeight = global.blocksize / 3;
+    readonly jumpHeight = 0.28777 * global.blocksize + 6.18705;
     readonly speed = 1;
     readonly maxSx = 8;
     readonly maxSy = 30;
@@ -21,6 +21,7 @@ export class Player {
         this.x = x;
         this.y = y;
 
+        console.log(this.jumpHeight, global.blocksize);
         offset.x = (width - this.w) / 2 - this.x;
         offset.y = (height - this.h) / 2 - this.y + 50;
     }

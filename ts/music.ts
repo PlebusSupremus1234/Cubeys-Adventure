@@ -3,7 +3,6 @@ export class Music {
     
     constructor(musicPath: string) {
         this.sound = document.createElement("audio");
-        console.log(this.sound);
         this.sound.src = musicPath;
         this.sound.setAttribute("preload", "auto");
         this.sound.setAttribute("controls", "none");

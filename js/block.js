@@ -10,10 +10,11 @@ export class Block {
     }
     draw(ctx) {
         let { x, y } = offset;
+        let px = this.x + x;
+        let py = this.y + y;
+        let { blocksize: b } = global;
         if (this.type === "spikes") {
-            let px = this.x + x;
-            let py = this.y + y;
-            let s = global.blocksize / 2;
+            let s = b / 2;
             for (let i = 0; i < 2; i++) {
                 ctx.fillStyle = "#85a1a3";
                 ctx.beginPath();
@@ -30,34 +31,40 @@ export class Block {
             }
         }
         else {
+            let color;
             if (this.type === "soil" || this.type === "ground")
-                ctx.fillStyle = "#a1593b";
+                color = "#a1593b";
             else if (this.type === "lava" || this.type === "lava2")
-                ctx.fillStyle = "#ff6200";
+                color = "#ff6200";
             else if (this.type === "ice")
-                ctx.fillStyle = "#99d4ff";
-            ctx.fillRect(this.x + x, this.y + y, this.w, this.h);
+                color = "#99d4ff";
+            ctx.fillStyle = color;
+            ctx.strokeStyle = color;
+            ctx.fillRect(px, py, this.w, this.h);
+            if (this.type !== "lava2")
+                ctx.strokeRect(px, py, this.w, this.h - 1);
             if (this.type === "ground") {
                 ctx.fillStyle = "#00d620";
-                ctx.fillRect(this.x + x, this.y + y, this.w, 15);
-                let s = global.blocksize / 3;
+                ctx.strokeStyle = "#00d620";
+                ctx.fillRect(px, py, this.w, 0.3 * b);
+                ctx.strokeRect(px, py, this.w, 0.3 * b);
+                let s = b / 3;
                 for (let i = 0; i < 3; i++) {
                     let a = i * s;
-                    let px = this.x + x;
-                    let py = this.y + y + 15;
                     ctx.beginPath();
-                    ctx.moveTo(px + a, py);
-                    ctx.lineTo(px + a + s, py);
-                    ctx.lineTo(px + a + s / 2, py + s / 2);
+                    ctx.moveTo(px + a, py + 0.3 * b);
+                    ctx.lineTo(px + a + s, py + 0.3 * b);
+                    ctx.lineTo(px + a + s / 2, py + 0.3 * b + s / 2);
                     ctx.fill();
                 }
             }
             else if (this.type === "lava2") {
-                let grad = ctx.createLinearGradient(this.x + x, this.y + y, this.x + x, this.y + y + 35);
+                let grad = ctx.createLinearGradient(px, py, px, py + 0.7 * this.h);
                 grad.addColorStop(0, "#ffb400");
                 grad.addColorStop(1, "#ff6200");
                 ctx.fillStyle = grad;
-                ctx.fillRect(this.x + x, this.y + y, this.w, 35);
+                ctx.strokeStyle = grad;
+                ctx.fillRect(px, py, this.w, 0.7 * this.h);
             }
         }
     }

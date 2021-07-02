@@ -1,6 +1,7 @@
 body {
   margin: 0;
   background-color: #51b8e1;
+  overflow: hidden;
 }
 
 button {

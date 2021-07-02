@@ -15,6 +15,7 @@ let lvl = 0;
 let map = levels[lvl].map;
 
 let grid = [];
+let text = [];
 let player;
 let gravity = 1;
 let offset = { x: 0, y: 0 };
@@ -51,6 +52,8 @@ function draw() {
     ctx.font = "20px Sans Serif";
     ctx.textAlign = "center";
     ctx.fillText(`Health ${player.health}%`, 40 + 100, 52);
+    
+    for (let i = 0; i < text.length; i++) ctx.fillText(text[i].content, text[i].x + offset.x, text[i].y + offset.y);
 
     if (global.levelComplete > 0) {
         ctx.fillStyle = `rgba(255, 255, 255, ${global.levelComplete / 100})`;
@@ -72,7 +75,7 @@ draw();
 
 document.getElementById("play").onclick = () => music.play();
 document.getElementById("pause").onclick = () => music.pause();
-document.getElementById("restart").onclick = () => location.reload();
+document.getElementById("restart").onclick = () => manageLevel(lvl);
 
 function keyDown(k) {
     if (k.key.toLowerCase() === "arrowleft") keysDown[0] = true;
@@ -89,9 +92,11 @@ function manageLevel(id: number) {
     global.alerted = 0;
     global.levelComplete = 0;
     lvl = id;
+    if (!levels[lvl]) return alert("You have completed the game!");
     map = levels[lvl].map;
-    if (!map) return alert("You have completed the game!");
     grid = [];
+    text = [];
+    keysDown = [false, false];
     for (let i = 0; i < map.length; i++) {
         for (let j = 0; j < map[i].length; j++) {
             let type;
@@ -102,6 +107,7 @@ function manageLevel(id: number) {
             else if (map[i][j] === "s") type = "spikes";
             else if (map[i][j] === "i") type = "ice";
             else if (map[i][j] === "p") type = "portal";
+            else if (map[i][j] === "t") text.push({ x: j * global.blocksize, y: i * global.blocksize, content: levels[lvl].txt[text.length] });
             else if (map[i][j] === "P") player = new Player(j * global.blocksize, i * global.blocksize);
             if (type) grid.push(new Block(j * global.blocksize, i * global.blocksize, type));
         }

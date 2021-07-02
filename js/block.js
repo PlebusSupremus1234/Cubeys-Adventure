@@ -100,7 +100,7 @@ export class Block {
                 if (this.type === "ice")
                     player.xVel /= 0.9;
             }
-            if (this.type === "portal")
+            if (this.type === "portal" && global.levelComplete === 0)
                 global.levelComplete = 1;
         }
     }

@@ -1,6 +1,6 @@
 import { offset } from "./sketch.js"
 import { global } from "./global.js"
-type options = "soil" | "ground" | "lava" | "lava2" | "spikes" | "ice";
+type options = "soil" | "ground" | "lava" | "lava2" | "spikes" | "ice" | "portal";
 type O1 = 0 | 1;
 
 export class Block {
@@ -43,6 +43,7 @@ export class Block {
             if (this.type === "soil" || this.type === "ground") color = "#a1593b";
             else if (this.type === "lava" || this.type === "lava2") color = "#ff6200";
             else if (this.type === "ice") color = "#99d4ff";
+            else if (this.type === "portal") color = `rgba(186, 52, 235, ${Math.random() * 0.3 + 0.6})`;
 
             ctx.fillStyle = color;
             ctx.strokeStyle = color;
@@ -101,6 +102,7 @@ export class Block {
                 player.y = pos;
                 if (this.type === "ice") player.xVel /= 0.9;
             }
+            if (this.type === "portal") global.levelComplete = 1;
         }
     }
 }

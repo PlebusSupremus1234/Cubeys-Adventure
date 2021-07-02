@@ -38,6 +38,8 @@ export class Block {
                 color = "#ff6200";
             else if (this.type === "ice")
                 color = "#99d4ff";
+            else if (this.type === "portal")
+                color = `rgba(186, 52, 235, ${Math.random() * 0.3 + 0.6})`;
             ctx.fillStyle = color;
             ctx.strokeStyle = color;
             ctx.fillRect(px, py, this.w, this.h);
@@ -98,6 +100,8 @@ export class Block {
                 if (this.type === "ice")
                     player.xVel /= 0.9;
             }
+            if (this.type === "portal")
+                global.levelComplete = 1;
         }
     }
 }

@@ -10,33 +10,9 @@ import { global } from "./global.js"
 let blocksize = width / 40;
 global.blocksize = blocksize;
 
-let map = [
-    "..........................",
-    "..........................",
-    "..........................",
-    "..........................",
-    "..........................",
-    "..........................",
-    "..........................",
-    "..........................",
-    ".....p......gggg..........",
-    "..........................",
-    ".................ssssggggg",
-    "gggggggggg.......gggg#####",
-    "##########LLLLLLL#########",
-    "##########lllllll#########",
-    "##########################"
-];
-/*
-    . = air
-    g = ground
-    # = soil
-    s = spikes
-    l = lava
-    L = lava with yellow grad
-    i = ice
-    p = player
-*/
+import { levels } from "./levels.js"
+let lvl = 0;
+let map = levels[lvl].map;
 
 let grid = [];
 let player;
@@ -51,22 +27,9 @@ export { offset, gravity, width, height };
 let keysDown = [false, false];
 document.addEventListener("keydown", keyDown);
 document.addEventListener("keyup", keyUp);
-
 let music = new Music("assets/music.mp3");
 
-for (let i = 0; i < map.length; i++) {
-    for (let j = 0; j < map[i].length; j++) {
-        let type;
-        if (map[i][j] === "#") type = "soil";
-        else if (map[i][j] === "g") type = "ground";
-        else if (map[i][j] === "l") type = "lava";
-        else if (map[i][j] === "L") type = "lava2";
-        else if (map[i][j] === "s") type = "spikes";
-        else if (map[i][j] === "i") type = "ice";
-        else if (map[i][j] === "p") player = new Player(j * global.blocksize, i * global.blocksize);
-        if (type) grid.push(new Block(j * global.blocksize, i * global.blocksize, type));
-    }
-}
+manageLevel(0);
 
 function draw() {
     requestAnimationFrame(draw);
@@ -89,11 +52,18 @@ function draw() {
     ctx.textAlign = "center";
     ctx.fillText(`Health ${player.health}%`, 40 + 100, 52);
 
-    if (global.alerted === 1) {
+    if (global.levelComplete > 0) {
+        ctx.fillStyle = `rgba(255, 255, 255, ${global.levelComplete / 100})`;
+        ctx.fillRect(0, 0, width, height);
+        global.levelComplete++;
+        if (global.levelComplete > 100) manageLevel(lvl + 1);
+    }
+
+    if (global.alerted === 1 && global.levelComplete === 0) {
         global.alerted = 2;
         setTimeout(() => {
             alert("You died!");
-            location.reload();
+            manageLevel(lvl);
         }, 1000);
     }
 }
@@ -113,4 +83,27 @@ function keyDown(k) {
 function keyUp(k) {
     if (k.key.toLowerCase() === "arrowleft") keysDown[0] = false;
     else if (k.key.toLowerCase() === "arrowright") keysDown[1] = false;
+}
+
+function manageLevel(id: number) {
+    global.alerted = 0;
+    global.levelComplete = 0;
+    lvl = id;
+    map = levels[lvl].map;
+    if (!map) return alert("You have completed the game!");
+    grid = [];
+    for (let i = 0; i < map.length; i++) {
+        for (let j = 0; j < map[i].length; j++) {
+            let type;
+            if (map[i][j] === "#") type = "soil";
+            else if (map[i][j] === "g") type = "ground";
+            else if (map[i][j] === "l") type = "lava";
+            else if (map[i][j] === "L") type = "lava2";
+            else if (map[i][j] === "s") type = "spikes";
+            else if (map[i][j] === "i") type = "ice";
+            else if (map[i][j] === "p") type = "portal";
+            else if (map[i][j] === "P") player = new Player(j * global.blocksize, i * global.blocksize);
+            if (type) grid.push(new Block(j * global.blocksize, i * global.blocksize, type));
+        }
+    }
 }

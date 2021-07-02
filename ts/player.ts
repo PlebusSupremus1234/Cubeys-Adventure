@@ -20,8 +20,7 @@ export class Player {
     constructor(x: number, y: number) {
         this.x = x;
         this.y = y;
-
-        console.log(this.jumpHeight, global.blocksize);
+        
         offset.x = (width - this.w) / 2 - this.x;
         offset.y = (height - this.h) / 2 - this.y + 50;
     }

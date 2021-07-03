@@ -7,7 +7,7 @@ canvas.height = height;
 import { global } from "./global.js";
 let blocksize = width / 40;
 global.blocksize = blocksize;
-import { levels } from "./levels.js";
+import { levels, updateLevel } from "./levels.js";
 let lvl = 0;
 let map = levels[lvl].map;
 let grid = [];
@@ -15,6 +15,7 @@ let text = [];
 let player;
 let gravity = 1;
 let offset = { x: 0, y: 0 };
+let time;
 import { Player } from "./player.js";
 import { Block } from "./block.js";
 import { Music } from "./music.js";
@@ -23,6 +24,14 @@ let keysDown = [false, false];
 document.addEventListener("keydown", keyDown);
 document.addEventListener("keyup", keyUp);
 let music = new Music("assets/music.mp3");
+let showlvlselect = false;
+let data = localStorage.getItem("levels");
+if (!data) {
+    let insert = [];
+    for (let i = 0; i < levels.length; i++)
+        insert.push({ level: i + 1, completed: false, unlocked: i === 0 ? true : false, time: 0 });
+    localStorage.setItem("levels", JSON.stringify(insert));
+}
 manageLevel(0);
 function draw() {
     requestAnimationFrame(draw);
@@ -33,7 +42,8 @@ function draw() {
         player.move("left");
     if (keysDown[1])
         player.move("right");
-    player.update(grid);
+    if (!showlvlselect)
+        player.update(grid);
     player.draw(ctx);
     for (let i = 0; i < grid.length; i++)
         grid[i].draw(ctx);
@@ -47,7 +57,12 @@ function draw() {
     ctx.fillText(`Health ${player.health}%`, 40 + 100, 52);
     for (let i = 0; i < text.length; i++)
         ctx.fillText(text[i].content, text[i].x + offset.x, text[i].y + offset.y);
+    if (showlvlselect)
+        document.getElementById("modal").style.display = "block";
     if (global.levelComplete > 0) {
+        if (global.levelComplete === 1) {
+            updateLevel(lvl + 1, Date.now() - time);
+        }
         ctx.fillStyle = `rgba(255, 255, 255, ${global.levelComplete / 100})`;
         ctx.fillRect(0, 0, width, height);
         global.levelComplete++;
@@ -65,7 +80,21 @@ function draw() {
 draw();
 document.getElementById("play").onclick = () => music.play();
 document.getElementById("pause").onclick = () => music.pause();
+document.getElementById("lvlselect").onclick = () => showlvlselect = !showlvlselect;
 document.getElementById("restart").onclick = () => manageLevel(lvl);
+document.getElementById("close").onclick = () => {
+    document.getElementById("modal").style.display = "none";
+    showlvlselect = false;
+};
+document.getElementById("btns").onclick = e => {
+    let t = e.target;
+    let id = parseInt(t.id);
+    if (id && id <= levels.length) {
+        manageLevel(id - 1);
+        document.getElementById("modal").style.display = "none";
+        showlvlselect = false;
+    }
+};
 function keyDown(k) {
     if (k.key.toLowerCase() === "arrowleft")
         keysDown[0] = true;
@@ -115,4 +144,5 @@ function manageLevel(id) {
                 grid.push(new Block(j * global.blocksize, i * global.blocksize, type));
         }
     }
+    time = Date.now();
 }

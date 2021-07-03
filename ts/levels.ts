@@ -30,16 +30,16 @@ export let levels = [
     {
         map: [
             "...P...................................................g............",
-            "..........t.......................................g...............p.",
+            "..........t.......................................g...........s...p.",
             "..............................................g..........ggggggggggg",
             "................s.............................#LLLLLLLLLL###########",
             "ggggggggg.....gggggggggg....g.....g.....gggggg#llllllllll###########",
-            "#########LLLLL##########LLLL#LLLLL#LLLLL############################",
+            "#########LLLLL##########LLLL#LLLLL#LLLLL#######llllllllll###########",
             "#########lllll##########llll#lllll#lllll############################",
-            "####################################################################",
+            "####################################################################"
         ],
         txt: [
-            "Hmm lava... that can't be good"
+            "Uh oh, lava... that can't be good"
         ]
     }
 ];
@@ -56,3 +56,11 @@ export let levels = [
     p = portal
     P = player    
 */
+
+export function updateLevel(l: number, t: number) {
+    let data = JSON.parse(localStorage.getItem("levels"));
+    data[l - 1].completed = true;
+    data[l - 1].time = data[l - 1].time && data[l - 1].time !== 0 ? Math.min(data[l - 1].time, t) : t;
+    if (data[l]) data[l].unlocked = true;
+    localStorage.setItem("levels", JSON.stringify(data));
+}

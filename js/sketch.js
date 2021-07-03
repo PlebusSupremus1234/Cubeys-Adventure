@@ -33,6 +33,7 @@ if (!data) {
     localStorage.setItem("levels", JSON.stringify(insert));
 }
 manageLevel(0);
+updateLevelMenu();
 function draw() {
     requestAnimationFrame(draw);
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -82,6 +83,16 @@ document.getElementById("play").onclick = () => music.play();
 document.getElementById("pause").onclick = () => music.pause();
 document.getElementById("lvlselect").onclick = () => showlvlselect = !showlvlselect;
 document.getElementById("restart").onclick = () => manageLevel(lvl);
+document.getElementById("cleardata").onclick = () => {
+    if (confirm("Are you sure you want to erase all your level data?")) {
+        localStorage.clear();
+        let insert = [];
+        for (let i = 0; i < levels.length; i++)
+            insert.push({ level: i + 1, completed: false, unlocked: i === 0 ? true : false, time: 0 });
+        localStorage.setItem("levels", JSON.stringify(insert));
+        updateLevelMenu();
+    }
+};
 document.getElementById("close").onclick = () => {
     document.getElementById("modal").style.display = "none";
     showlvlselect = false;
@@ -114,7 +125,7 @@ function manageLevel(id) {
     global.levelComplete = 0;
     lvl = id;
     if (!levels[lvl])
-        return alert("You have completed the game!");
+        return alert("Congrats! You have completed the game. Now maybe try to improve your times");
     map = levels[lvl].map;
     grid = [];
     text = [];
@@ -145,4 +156,23 @@ function manageLevel(id) {
         }
     }
     time = Date.now();
+    updateLevelMenu();
+}
+export function updateLevelMenu() {
+    let element = document.getElementById("btns");
+    element.innerHTML = "";
+    let data = JSON.parse(localStorage.getItem("levels"));
+    for (let i = 0; i < data.length; i++) {
+        let d = document.createElement("div");
+        let btn = document.createElement("button");
+        btn.innerHTML = data[i].level;
+        btn.id = (i + 1).toString();
+        if (data[i].completed)
+            btn.classList.add("greenborder");
+        let p = document.createElement("p");
+        p.innerHTML = data[i].completed ? `${data[i].time / 1000}s` : "-";
+        d.appendChild(btn);
+        d.appendChild(p);
+        element.appendChild(d);
+    }
 }

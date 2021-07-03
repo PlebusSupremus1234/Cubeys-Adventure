@@ -111,6 +111,15 @@ button {
   border: 5px solid #00ca1e !important;
 }
 
+#cleardata {
+  text-decoration: underline;
+  margin: 10px;
+}
+
+#cleardata:hover {
+  cursor: pointer;
+}
+
 @-webkit-keyframes animatetop {
   from {
     top: -300px;

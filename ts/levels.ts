@@ -1,3 +1,5 @@
+import { updateLevelMenu } from "./sketch.js"
+
 export let levels = [
     {
         map: [
@@ -63,4 +65,5 @@ export function updateLevel(l: number, t: number) {
     data[l - 1].time = data[l - 1].time && data[l - 1].time !== 0 ? Math.min(data[l - 1].time, t) : t;
     if (data[l]) data[l].unlocked = true;
     localStorage.setItem("levels", JSON.stringify(data));
+    updateLevelMenu();
 }

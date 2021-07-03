@@ -20,28 +20,11 @@
         </div>
         <div id="modal">
             <div id="mcontent">
+                <span id="cleardata">Clear Data</span>
                 <span id="close">&times;</span>
                 <p id="h">Level Select</p>
                 <div id="btns"></div>
             </div>
         </div>
-        <script>
-            let element = document.getElementById("btns");
-            let data = JSON.parse(localStorage.getItem("levels"));
-            for (let i = 0; i < data.length; i++) {
-                let d = document.createElement("div");
-                let btn = document.createElement("button");
-                btn.innerHTML = data[i].level;
-                btn.id = (i + 1).toString();
-                if (data[i].completed) btn.classList.add("greenborder");
-                d.appendChild(btn);
-                if (data[i].completed) {
-                    let p = document.createElement("p");
-                    p.innerHTML = `${data[i].time / 1000}s`;
-                    d.appendChild(p);
-                }
-                element.appendChild(d);
-            }
-        </script>
     </body>
 </html>

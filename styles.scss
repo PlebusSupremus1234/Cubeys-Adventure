@@ -72,6 +72,7 @@ button {
     & div {
         display: inline-block;
 
+
         & button {
             margin: 20px 30px;
             padding: 30px 40px;
@@ -99,6 +100,15 @@ button {
 
 .greenborder {
     border: 5px solid #00ca1e !important;
+}
+
+#cleardata {
+    text-decoration: underline;
+    margin: 10px;
+
+    &:hover {
+        cursor: pointer;
+    }
 }
 
 @keyframes animatetop {

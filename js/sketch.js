@@ -5,33 +5,26 @@ let height = window.innerHeight - 4;
 canvas.width = width;
 canvas.height = height;
 import { global } from "./global.js";
-let blocksize = width / 40;
-global.blocksize = blocksize;
-import { levels, updateLevel } from "./levels.js";
-let lvl = 0;
-let map = levels[lvl].map;
-let grid = [];
-let text = [];
-let player;
-let gravity = 1;
-let offset = { x: 0, y: 0 };
-let time;
 import { Player } from "./player.js";
 import { Block } from "./block.js";
 import { Music } from "./music.js";
-export { offset, gravity, width, height };
-let keysDown = [false, false];
+import { levels, updateLevel } from "./levels.js";
+let blocksize = width / 40;
+global.blocksize = blocksize;
+let grid = [];
+let text = [];
+let map = [];
+let lvl = 0;
+let player;
+let gravity = 1;
+let offset = { x: 0, y: 0 };
+let start;
+let LRKeys = [false, false];
 document.addEventListener("keydown", keyDown);
 document.addEventListener("keyup", keyUp);
 let music = new Music("assets/music.mp3");
+export { offset, gravity, width, height };
 let showlvlselect = false;
-let data = localStorage.getItem("levels");
-if (!data) {
-    let insert = [];
-    for (let i = 0; i < levels.length; i++)
-        insert.push({ level: i + 1, completed: false, unlocked: i === 0 ? true : false, time: 0 });
-    localStorage.setItem("levels", JSON.stringify(insert));
-}
 manageLevel(0);
 updateLevelMenu();
 function draw() {
@@ -39,9 +32,9 @@ function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = "#51b8e1";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-    if (keysDown[0])
+    if (LRKeys[0])
         player.move("left");
-    if (keysDown[1])
+    if (LRKeys[1])
         player.move("right");
     if (!showlvlselect)
         player.update(grid);
@@ -59,18 +52,17 @@ function draw() {
     for (let i = 0; i < text.length; i++)
         ctx.fillText(text[i].content, text[i].x + offset.x, text[i].y + offset.y);
     if (showlvlselect)
-        document.getElementById("modal").style.display = "block";
-    if (global.levelComplete > 0) {
-        if (global.levelComplete === 1) {
-            updateLevel(lvl + 1, Date.now() - time);
+        findClassElement("modal", 0).style.display = "block";
+    if (global.levelComplete) {
+        let element = findClassElement("modal", 1);
+        let t = element.children[0].children[1];
+        if (t.innerHTML === "") {
+            element.children[0].children[1].innerHTML = `Time: ${(Date.now() - start) / 1000}s`;
+            element.style.display = "block";
         }
-        ctx.fillStyle = `rgba(255, 255, 255, ${global.levelComplete / 100})`;
-        ctx.fillRect(0, 0, width, height);
-        global.levelComplete++;
-        if (global.levelComplete > 100)
-            manageLevel(lvl + 1);
+        updateLevel(lvl + 1, Date.now() - start);
     }
-    if (global.alerted === 1 && global.levelComplete === 0) {
+    if (global.alerted === 1 && !global.levelComplete) {
         global.alerted = 2;
         setTimeout(() => {
             alert("You died!");
@@ -86,50 +78,59 @@ document.getElementById("restart").onclick = () => manageLevel(lvl);
 document.getElementById("cleardata").onclick = () => {
     if (confirm("Are you sure you want to erase all your level data?")) {
         localStorage.clear();
-        let insert = [];
-        for (let i = 0; i < levels.length; i++)
-            insert.push({ level: i + 1, completed: false, unlocked: i === 0 ? true : false, time: 0 });
-        localStorage.setItem("levels", JSON.stringify(insert));
         updateLevelMenu();
     }
 };
 document.getElementById("close").onclick = () => {
-    document.getElementById("modal").style.display = "none";
+    findClassElement("modal", 0).style.display = "none";
     showlvlselect = false;
+};
+document.getElementById("retry").onclick = () => {
+    findClassElement("modal", 1).children[0].children[1].innerHTML = "";
+    findClassElement("modal", 1).style.display = "none";
+    manageLevel(lvl);
+};
+document.getElementById("nxtlvl").onclick = () => {
+    findClassElement("modal", 1).style.display = "none";
+    findClassElement("modal", 1).children[0].children[1].innerHTML = "";
+    manageLevel(lvl + 1);
 };
 document.getElementById("btns").onclick = e => {
     let t = e.target;
     let id = parseInt(t.id);
     if (id && id <= levels.length) {
         manageLevel(id - 1);
-        document.getElementById("modal").style.display = "none";
+        findClassElement("modal", 0).style.display = "none";
         showlvlselect = false;
     }
 };
 function keyDown(k) {
     if (k.key.toLowerCase() === "arrowleft")
-        keysDown[0] = true;
+        LRKeys[0] = true;
     else if (k.key.toLowerCase() === "arrowup")
         player.move("up");
     else if (k.key.toLowerCase() === "arrowright")
-        keysDown[1] = true;
+        LRKeys[1] = true;
 }
 function keyUp(k) {
     if (k.key.toLowerCase() === "arrowleft")
-        keysDown[0] = false;
+        LRKeys[0] = false;
     else if (k.key.toLowerCase() === "arrowright")
-        keysDown[1] = false;
+        LRKeys[1] = false;
+}
+function findClassElement(name, id) {
+    return document.getElementsByClassName(name)[id];
 }
 function manageLevel(id) {
     global.alerted = 0;
-    global.levelComplete = 0;
+    global.levelComplete = false;
     lvl = id;
     if (!levels[lvl])
         return alert("Congrats! You have completed the game. Now maybe try to improve your times");
     map = levels[lvl].map;
     grid = [];
     text = [];
-    keysDown = [false, false];
+    LRKeys = [false, false];
     for (let i = 0; i < map.length; i++) {
         for (let j = 0; j < map[i].length; j++) {
             let type;
@@ -155,13 +156,20 @@ function manageLevel(id) {
                 grid.push(new Block(j * global.blocksize, i * global.blocksize, type));
         }
     }
-    time = Date.now();
+    start = Date.now();
     updateLevelMenu();
 }
 export function updateLevelMenu() {
+    let data = JSON.parse(localStorage.getItem("levels"));
+    if (!data) {
+        let insert = [];
+        for (let i = 0; i < levels.length; i++)
+            insert.push({ level: i + 1, completed: false, unlocked: i === 0 ? true : false, time: 0 });
+        localStorage.setItem("levels", JSON.stringify(insert));
+        data = insert;
+    }
     let element = document.getElementById("btns");
     element.innerHTML = "";
-    let data = JSON.parse(localStorage.getItem("levels"));
     for (let i = 0; i < data.length; i++) {
         let d = document.createElement("div");
         let btn = document.createElement("button");

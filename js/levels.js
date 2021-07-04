@@ -40,7 +40,7 @@ export let levels = [
             "####################################################################"
         ],
         txt: [
-            "Uh oh, lava... that can't be good"
+            "Uh oh, lava... this can't be good"
         ]
     }
 ];

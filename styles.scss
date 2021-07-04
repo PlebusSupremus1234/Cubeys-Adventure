@@ -17,7 +17,7 @@ button {
     width: 100%;
 }
 
-#modal {
+.modal {
     display: none;
     position: fixed;
     z-index: 1;
@@ -31,7 +31,7 @@ button {
     background-color: rgba(0, 0, 0, 0.4);
 }
 
-#mcontent {
+.mcontent {
     position: relative;
     background-color: #51b8e1;
     margin: auto;
@@ -58,7 +58,7 @@ button {
     }
 }
 
-#h {
+.h {
     font-weight: bold;
     font-size: 40px;
     text-align: center;
@@ -109,6 +109,38 @@ button {
     &:hover {
         cursor: pointer;
     }
+}
+
+.modal2 {
+    & div {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        margin-top: 30px;
+
+        & button {
+            border: none;
+            background: red;
+            margin: 20px;
+            padding: 30px 60px;
+            font-family: sans-serif;
+            font-size: 20px;
+            transition: .3s;
+            border-radius: 5px;
+            transition: .2s;
+
+            &:hover {
+                background: #e40000;
+                cursor: pointer;
+            }
+        }
+    }
+}
+
+#time {
+    width: 100%;
+    text-align: center;
+    font-size: 30px;
 }
 
 @keyframes animatetop {
